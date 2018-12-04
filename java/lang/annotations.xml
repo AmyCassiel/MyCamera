@@ -1,0 +1,8 @@
+<root>
+    <item name='java.lang.StringBuffer java.lang.StringBuffer append(double)'>
+        <annotation name='android.support.annotation.NonNull' />
+    </item>
+    <item name='java.lang.StringBuffer java.lang.StringBuffer append(java.lang.String)'>
+        <annotation name='java.lang.Deprecated' />
+    </item>
+</root>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <accessibility-service
+        android:accessibilityEventTypes="typeViewClicked|typeViewFocused"
+        android:packageNames="com.example.android.myFirstApp, com.example.android.mySecondApp"
+        android:accessibilityFeedbackType="feedbackSpoken"
+        android:notificationTimeout="100"
+        android:settingsActivity="com.example.android.apis.accessibility.TestBackActivity"
+        android:canRetrieveWindowContent="true" />
+
+</PreferenceScreen>
