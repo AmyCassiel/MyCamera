@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -14,14 +15,13 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.format.DateFormat;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -30,8 +30,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -39,25 +37,18 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 import static android.media.MediaRecorder.VideoSource.CAMERA;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int REQUEST_ORIGINAL = 1;
     // 构造存储图片的文件的路径，文件名为当前时间
     String filePath = Environment.getExternalStorageDirectory().getAbsolutePath()
-            + "/" + System.currentTimeMillis() + ".png";
-    private ImageView imageView;
+            + "/" + System.currentTimeMillis() + ".jpg";
+    private static final int REQUEST_ORIGINAL = 1;
     private WindowManager mWindowManager;
     private WindowManager.LayoutParams mWindowLayoutParams;
     private View floatWindowView;
-    private FloatingActionsMenu float_button;
-    private HRBroadcastReceiver mHRBroadcastReceiver;
-    private File photoDir;
-    private File photo;
     private String mCurrentPhotoPath;
 
     @Override
@@ -116,26 +107,24 @@ public class MainActivity extends AppCompatActivity {
             // Continue only if the File was successfully created
             if (photoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(MainActivity.this,
-                        "com.example.a3droplets.mycamera.FileProvider",
+                        BuildConfig.APPLICATION_ID + ".provider",
                         createImageFile());
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_ORIGINAL);
             }
         }
     }
-
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "IGM_" + timeStamp + "_";
+        String imageFileName = "IGM_" + timeStamp;
         File storageDir = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_DCIM), "Camera");
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
+                ".jpg",   /* suffix */
                 storageDir      /* directory */
         );
-
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = "file:" + image.getAbsolutePath();
         return image;
@@ -190,47 +179,6 @@ public class MainActivity extends AppCompatActivity {
         mWindowLayoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
         floatWindowView = LayoutInflater.from(this).inflate(R.layout.float_view, null);//设置悬浮窗的布局
         mWindowManager.addView(floatWindowView, mWindowLayoutParams);//加载显示悬浮窗
-        com.getbase.floatingactionbutton.FloatingActionButton fab = (com.getbase.floatingactionbutton.FloatingActionButton) findViewById(R.id.fab0);
-        com.getbase.floatingactionbutton.FloatingActionButton fab1 = (com.getbase.floatingactionbutton.FloatingActionButton) findViewById(R.id.fab1);
-        com.getbase.floatingactionbutton.FloatingActionButton fab2 = (com.getbase.floatingactionbutton.FloatingActionButton) findViewById(R.id.fab2);
-        com.getbase.floatingactionbutton.FloatingActionButton fab3 = (com.getbase.floatingactionbutton.FloatingActionButton) findViewById(R.id.fab3);
-    }
-    private final BroadcastReceiver homeListenerReceiver = new BroadcastReceiver() {
-        final String SYSTEM_DIALOG_REASON_KEY = "reason";
-        final String SYSTEM_DIALOG_REASON_HOME_KEY = "homekey";
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action.equals(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)) {
-                String reason = intent.getStringExtra(SYSTEM_DIALOG_REASON_KEY);
-                if (reason != null && reason.equals(SYSTEM_DIALOG_REASON_HOME_KEY)) {
-                    // 处理自己的逻辑
-                    mWindowManager.removeView(floatWindowView);
-                }
-            }
-        }
-    };
-    public void onReceive(Context context, Intent intent) {
-
-        IntentFilter homeFilter = new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
-        context.registerReceiver(homeListenerReceiver, homeFilter);
-        // 反注册home监听
-        if (homeListenerReceiver != null) {
-            context.unregisterReceiver(homeListenerReceiver);
-        }
-    }
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        mWindowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);//得到浮动窗口管理器
-        floatWindowView = LayoutInflater.from(this).inflate(R.layout.float_view, null);//设置悬浮窗的布局
-        switch (event.getKeyCode()) {
-            case KeyEvent.KEYCODE_BACK:
-                mWindowManager.removeView(floatWindowView);
-            case KeyEvent.KEYCODE_MENU:
-                mWindowManager.removeView(floatWindowView);
-            default:
-                break;
-        }
-        return super.dispatchKeyEvent(event);
     }
 
     @Override
@@ -240,19 +188,26 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == CAMERA &&resultCode == Activity.RESULT_OK && null != data) {
             // Show the thumbnail on ImageView
-
             Uri imageUri = Uri.parse(mCurrentPhotoPath);
             File file = new File(imageUri.getPath());
+            FileOutputStream fos = null;
             try {
                 InputStream ims = new FileInputStream(file);
                 Bitmap bmp = BitmapFactory.decodeStream(ims);
                 Bitmap bm = MyWaterMask.addMarkFlag(bmp);
-                imageView = (ImageView)findViewById(R.id.imageView);
-                imageView.setImageBitmap(bm);
+                fos = new FileOutputStream(file);
+                bm.compress(Bitmap.CompressFormat.JPEG,100,fos);
+                ((ImageView)findViewById(R.id.imageView)).setImageBitmap(bm);
             } catch (FileNotFoundException e) {
-                return;
+                e.printStackTrace();
+            }finally {
+                try {
+                    fos.flush();
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-
             // ScanFile so it will be appeared on Gallery
             MediaScannerConnection.scanFile(MainActivity.this,
                     new String[]{imageUri.getPath()}, null,
@@ -263,9 +218,9 @@ public class MainActivity extends AppCompatActivity {
             mWindowManager.removeView(floatWindowView);//回收悬浮窗口
         }
     }
+
     public void onDestroy() {
         mWindowManager.removeView(floatWindowView);
         super.onDestroy();
     }
-
 }

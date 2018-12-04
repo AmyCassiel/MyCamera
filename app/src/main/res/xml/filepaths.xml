@@ -3,25 +3,25 @@
 
     <paths xmlns:android = "http://schemas.android.com/apk/res/android">
 
-        <!--外部存储区域的根目录显示文件 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)/DCIM/camerademo目录-->
-        <external-path name="DCIM" path="DCIM/camerademo"/>
+        <!--外部存储区域的根目录显示文件 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)/DCIM/camera目录-->
+        <external-path name="DCIM" path="DCIM/Camera"/>
 
-        <!--代表外部存储区域的根目录下的文件 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)/Pictures/camerademo目录-->
-        <external-path name="Pictures" path="Pictures/camerademo" />
+        <!--代表外部存储区域的根目录下的文件 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)/Pictures/camera目录-->
+        <external-path name="Pictures" path="Pictures/Camera" />
 
-        <!--代表app 私有的存储区域 Context.getFilesDir()目录下的images目录 /data/user/0/com.hm.camerademo/files/images-->
-        <files-path name="private_files" path="images" />
+        <!--代表app 私有的存储区域 Context.getFilesDir()目录下的images目录 /data/user/0/camera/files/images-->
+        <files-path name="private_files" path="Images" />
 
-        <!--代表app 私有的存储区域 Context.getCacheDir()目录下的images目录 /data/user/0/com.hm.camerademo/cache/images-->
-        <cache-path name="private_cache" path="images" />
+        <!--代表app 私有的存储区域 Context.getCacheDir()目录下的images目录 /data/user/0/camera/cache/images-->
+        <cache-path name="private_cache" path="Images" />
 
         <!--代表app 外部存储区域根目录下的文件 Context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)目录下的Pictures目录-->
-        <!--/storage/emulated/0/Android/data/com.hm.camerademo/files/Pictures-->
+        <!--/storage/emulated/0/Android/data/camera/files/Pictures-->
         <external-files-path name="external_files" path="Pictures/" />
 
         <!--代表app 外部存储区域根目录下的文件 Context.getExternalCacheDir目录下的images目录-->
-        <!--/storage/emulated/0/Android/data/camerademo/cache/images-->
-        <external-cache-path name="external_cache" path="images" />
+        <!--/storage/emulated/0/Android/data/camera/cache/images-->
+        <external-cache-path name="external_cache" path="Images" />
 
     </paths>
 </resources>

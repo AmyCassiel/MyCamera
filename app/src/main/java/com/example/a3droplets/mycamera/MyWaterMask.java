@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class MyWaterMask {
+
     public static Bitmap addMarkFlag(Bitmap srcbitmap) {
         int w = srcbitmap.getWidth();
         int h = srcbitmap.getHeight();
@@ -20,7 +21,7 @@ public class MyWaterMask {
         //往位图中开始画入原始图片
         mcanvas.drawBitmap(srcbitmap,0,0,null);
         Paint textPaint = new Paint();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"+"\n");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         String time = sdf.format(new Date(System.currentTimeMillis()));
         BDLocation bdLocation = new BDLocation();
         StringBuffer sb = new StringBuffer(256);
@@ -35,7 +36,7 @@ public class MyWaterMask {
         String addrstr = "地址：" + bdLocation.getAddrStr();
 
         textPaint.setColor(Color.YELLOW);
-        textPaint.setTextSize(9);
+        textPaint.setTextSize(100);
 
         mcanvas.drawText(Time,(float)(w*1)/30,(float)(h*14)/18,textPaint);
         mcanvas.drawText(latitude,(float)(w*1)/30,(float)(h*14)/17,textPaint);
