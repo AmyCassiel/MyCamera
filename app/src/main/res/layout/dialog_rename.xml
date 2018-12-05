@@ -14,25 +14,4 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="140dp" />
 
-    <Button
-        android:id="@+id/bt_ok"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/rename_edit"
-        android:layout_alignLeft="@+id/rename_edit"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="218dp"
-        android:text="OK" />
-
-    <Button
-        android:id="@+id/bt_cancel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/bt_ok"
-        android:layout_alignEnd="@+id/rename_edit"
-        android:layout_marginEnd="2dp"
-        android:layout_alignRight="@+id/rename_edit"
-        android:layout_marginRight="2dp"
-        android:text="Cancel"/>
-
 </RelativeLayout>
